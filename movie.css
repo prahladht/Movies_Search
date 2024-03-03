@@ -3,4 +3,9 @@
 }
 .result-title {
     font-size: 22px;
+    margin-top: 10px;
 }
+.result-poster{
+    height: 200px;
+    width: 200px;
+  }
