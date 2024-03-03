@@ -7,6 +7,29 @@ function createAndDisplayResult(result) {
     resultContainerEl.classList.add("result-item");
     movieDetailsEl.appendChild(resultContainerEl);
 
+    // Fetch movie details including the poster
+    fetchMovieDetails(id)
+        .then(movie => {
+            const posterPath = movie.poster_path;
+            if (posterPath) {
+                let posterEl = document.createElement("img");
+                posterEl.classList.add("result-poster");
+                posterEl.src = "https://image.tmdb.org/t/p/w500" + posterPath;
+                posterEl.alt = title + " Poster";
+                posterEl.addEventListener("click", function() {
+                    window.open("https://image.tmdb.org/t/p/original" + posterPath);
+                });
+                resultContainerEl.appendChild(posterEl);
+            } else {
+                let noPosterEl = document.createElement("p");
+                noPosterEl.textContent = "Poster not available";
+                resultContainerEl.appendChild(noPosterEl);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching movie details:', error);
+        });
+
     let titleEl = document.createElement("h1");
     titleEl.classList.add("result-title");
     titleEl.textContent = title;
@@ -37,7 +60,7 @@ function createAndDisplayResult(result) {
         .then(credits => {
             // Extract director and top actors
             const director = credits.crew.find(member => member.job === 'Director');
-            const actors = credits.cast.slice(0, 4).map(actor => actor.name); // Get top 3 actors and map their names
+            const actors = credits.cast.slice(0, 3).map(actor => actor.name); // Get top 3 actors and map their names
 
             // Display director and actors
             let directorEl = document.createElement("p");
@@ -58,6 +81,14 @@ function createAndDisplayResult(result) {
 async function fetchMovieCredits(movieId) {
     const apiKey = 'c6aac242fd5053d7709e338580942508';
     const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+}
+
+async function fetchMovieDetails(movieId) {
+    const apiKey = 'c6aac242fd5053d7709e338580942508';
+    const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
     const response = await fetch(url);
     const data = await response.json();
     return data;
