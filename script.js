@@ -7,29 +7,6 @@ function createAndDisplayResult(result) {
     resultContainerEl.classList.add("result-item");
     movieDetailsEl.appendChild(resultContainerEl);
 
-    // Fetch movie details including the poster
-    fetchMovieDetails(id)
-        .then(movie => {
-            const posterPath = movie.poster_path;
-            if (posterPath) {
-                let posterEl = document.createElement("img");
-                posterEl.classList.add("result-poster");
-                posterEl.src = "https://image.tmdb.org/t/p/w500" + posterPath;
-                posterEl.alt = title + " Poster";
-                posterEl.addEventListener("click", function() {
-                    window.open("https://image.tmdb.org/t/p/original" + posterPath);
-                });
-                resultContainerEl.appendChild(posterEl);
-            } else {
-                let noPosterEl = document.createElement("p");
-                noPosterEl.textContent = "Poster not available";
-                resultContainerEl.appendChild(noPosterEl);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching movie details:', error);
-        });
-
     let titleEl = document.createElement("h1");
     titleEl.classList.add("result-title");
     titleEl.textContent = title;
@@ -75,6 +52,29 @@ function createAndDisplayResult(result) {
         })
         .catch(error => {
             console.error('Error fetching credits:', error);
+        });
+
+    // Fetch movie details including the poster
+    fetchMovieDetails(id)
+        .then(movie => {
+            const posterPath = movie.poster_path;
+            if (posterPath) {
+                let posterEl = document.createElement("img");
+                posterEl.classList.add("result-poster");
+                posterEl.src = "https://image.tmdb.org/t/p/w500" + posterPath;
+                posterEl.alt = title + " Poster";
+                posterEl.addEventListener("click", function() {
+                    window.open("https://image.tmdb.org/t/p/original" + posterPath);
+                });
+                resultContainerEl.appendChild(posterEl);
+            } else {
+                let noPosterEl = document.createElement("p");
+                noPosterEl.textContent = "Poster not available";
+                resultContainerEl.appendChild(noPosterEl);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching movie details:', error);
         });
 }
 
